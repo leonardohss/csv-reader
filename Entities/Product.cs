@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Globalization;
 
 namespace CsvReader.Entities
 {
@@ -9,8 +7,6 @@ namespace CsvReader.Entities
         public string name { get; set; }
         public double price { get; set; }
         public int quantity { get; set; }
-
-        public Product() { }
 
         public Product(string name, double price, int quantity)
         {
@@ -26,7 +22,7 @@ namespace CsvReader.Entities
 
         public override string ToString()
         {
-            return name + "," + Total().ToString("F2"); 
+            return name + "," + Total().ToString("F2",CultureInfo.InvariantCulture); 
         }
     }
 }

@@ -11,8 +11,9 @@ namespace CsvReader
         static void Main(string[] args)
         {
             string pathSource = @"c:\temp\file1.csv";
+            string targetPath = @"c:\temp\file2.csv";
 
-            Product[] products = new Product[10];
+            List<Product> products = new List<Product>();
             
             try
             {
@@ -25,15 +26,22 @@ namespace CsvReader
                         string name = line[0];
                         double price = double.Parse(line[1], CultureInfo.InvariantCulture);
                         int quantity = int.Parse(line[2]);
-                        products[x] = new Product(name, price, quantity);
+                        products.Add(new Product(name, price, quantity));
                         x++;
+                    }
+                    using (StreamWriter sw = File.AppendText(targetPath))
+                    {
+                        foreach (Product product in products)
+                        {
+                            sw.WriteLine(product);
+                        }
                     }
                 }
 
-                foreach(Product product in products)
+                foreach (Product product in products)
                 {
-                    Console.WriteLine(product);
-                }
+                    Console.WriteLine(product); 
+                }  
             }
             catch (IOException e)
             {
