@@ -10,38 +10,43 @@ namespace CsvReader
     {
         static void Main(string[] args)
         {
-            string pathSource = @"c:\temp\file1.csv";
-            string targetPath = @"c:\temp\file2.csv";
+            Console.Write("Enter the file full path: ");
+            string sourceFilePath = Console.ReadLine();
 
             List<Product> products = new List<Product>();
-            
+
             try
             {
-                using (StreamReader sr = File.OpenText(pathSource))
+                string[] lines = File.ReadAllLines(sourceFilePath);
+
+                string sourceFolderPath = Path.GetDirectoryName(sourceFilePath);
+                string targetFolderPath = sourceFolderPath + @"\out";
+                string targetFilePath = targetFolderPath + @"\file2.csv";
+
+                Directory.CreateDirectory(targetFolderPath);
+
+                int x = 0;
+                foreach (string line in lines)
                 {
-                    int x = 0; 
-                    while (!sr.EndOfStream)
-                    {
-                        string[] line = (sr.ReadLine().Split(','));
-                        string name = line[0];
-                        double price = double.Parse(line[1], CultureInfo.InvariantCulture);
-                        int quantity = int.Parse(line[2]);
-                        products.Add(new Product(name, price, quantity));
-                        x++;
-                    }
-                    using (StreamWriter sw = File.AppendText(targetPath))
-                    {
-                        foreach (Product product in products)
-                        {
-                            sw.WriteLine(product);
-                        }
-                    }
+                    string[] fields = line.Split(',');
+
+                    string name = fields[0];
+                    double price = double.Parse(fields[1], CultureInfo.InvariantCulture);
+                    int quantity = int.Parse(fields[2]);
+
+                    products.Add(new Product(name, price, quantity));
+                    x++;
                 }
 
-                foreach (Product product in products)
+                using (StreamWriter sw = File.AppendText(targetFilePath))
                 {
-                    Console.WriteLine(product); 
-                }  
+                    foreach (Product product in products)
+                    {
+                        sw.WriteLine(product);
+                        Console.WriteLine(product);
+                    }
+                }
+ 
             }
             catch (IOException e)
             {
